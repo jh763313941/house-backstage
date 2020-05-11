@@ -206,6 +206,27 @@
 
 
 <div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>跳转小程序APPID</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="appid" id="appid" class="form-control" value="{$item['appid']}" />
+	</div>
+</div>
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>跳转小程序路径</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="applink" id="applink" class="form-control" value="{$item['applink']}" />
+	</div>
+</div>
+
+
+
+
+
+
+
+<div class="form-group">
  <label class="col-xs-12 col-sm-3 col-md-2 control-label">腾讯地图位置</label>
                             <div class="col-sm-9 col-xs-12">
                               
@@ -232,10 +253,10 @@
             </script>
         <div class="row row-fix">
             <div class="col-xs-4 col-sm-4">
-                <input type="text" name="map[lng]" value="" placeholder="地理经度"  class="form-control" />
+                <input type="text" name="location[lng]" value="{$item['lng']}" placeholder="地理经度"  class="form-control" />
             </div>
             <div class="col-xs-4 col-sm-4">
-                <input type="text" name="map[lat]" value="" placeholder="地理纬度"  class="form-control" />
+                <input type="text" name="location[lat]" value="{$item['lat']}" placeholder="地理纬度"  class="form-control" />
             </div>
             <div class="col-xs-4 col-sm-4">
                 <button onclick="showCoordinate2(this);" class="btn btn-default" type="button">选择坐标</button>

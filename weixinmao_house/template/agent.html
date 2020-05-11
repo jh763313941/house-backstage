@@ -1,10 +1,16 @@
 {template 'common/header'}
 <ul class="nav nav-tabs">
 	<li {if $operation == 'display'} class="active" {/if}><a href="{php echo $this->createWebUrl('agent',array('op' =>'display'))}">经纪人列表</a></li>
-	<!--
+  	<li {if $operation == 'agent_setting'} class="active" {/if}><a href="{php echo $this->createWebUrl('agent',array('op' =>'agent_setting'))}">佣金比例设置</a></li>
+    <li {if $operation == 'agent_team'} class="active" {/if}><a href="{php echo $this->createWebUrl('agent',array('op' =>'agent_team'))}">经纪人团队管理</a></li>
+	<li {if $operation == 'agent_guest'} class="active" {/if}><a href="{php echo $this->createWebUrl('agent',array('op' =>'agent_guest'))}">经纪人客户管理</a></li>
+
+
+
+	
 	<li{if empty($area['id']) && $operation == 'post'} class="active" {/if}><a href="{php echo $this->createWebUrl('agent',array('op' =>'post'))}">添加经纪人</a></li>
 
-	-->
+
 	{if !empty($agent['id']) &&  $operation == 'post'}<li  class="active"><a href="{php echo $this->createWebUrl('agent',array('op' =>'post','id'=>$agent['id']))}">编辑经纪人</a></li>{/if}
 </ul>
 
@@ -15,16 +21,16 @@
 			<thead class="navbar-inner">
 				<tr>
 					<th style="width:30px;">ID</th>
-					<th>显示顺序</th>	
-						<th>城市</th>					
+					<th>排序</th>	
+                  <th>套餐</th>	
+					<th>城市</th>					
 					<th>姓名</th>
 					<th>电话</th>
-					<th>QQ</th>
-                  <th>公司</th>
-					<th>二手房总数</th>
-					<th>出租房总数</th>
-					<th> 今日二手房</th>
-					<th>今日出租房</th>
+					<th>微信</th>
+                  	<th>公司</th>
+					<th>二手房</th>
+					<th>出租房</th>
+				
 					<th>创建时间</th>
 					<th>状态</th>
 					<th >操作</th>
@@ -35,6 +41,7 @@
 				<tr>
 					<td>{$vo['id']}</td>
 					<td>{$vo['sort']}</td>
+                  <td><span class="label label-success">{$vo['agentrolename']}</span></td>
 					<td>{$vo['cityname']}</td>
 					<td>{$vo['name']}</td>
 					<td>{$vo['tel']}</td>
@@ -42,10 +49,155 @@
                   <td>{$vo['companyname']}</td>
 					<td>{$vo['oldhousecount']}</td>
 					<td>{$vo['lethousecount']}</td>
-					<td>{$vo['todayoldhousecount']}</td>
-					<td>{$vo['todaylethousecount']}</td>
+		
 					<td>{php echo date('Y-m-d',$vo['createtime']);}</td>
-					<td> {if $vo['enabled'] == 1} <span style="color:blue;">审核通过</span>{else} <span style="color:red;">待审核</span>{/if}</td>
+					<td> {if $vo['enabled'] == 1} <span class="label label-success">审核通过</span>{else} <span class="label label-danger">待审核</span>{/if}</td>
+					<td style="text-align:left;">
+                      	<a href="{php echo $this->createWebUrl('agent', array('op' => 'editagent', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改套餐">修改套餐</a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'post', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'delete', 'id' => $vo['id']))}"class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+				{/loop}
+			</tbody>
+		</table>
+		{$pager}
+	</div>
+</div>
+<script>
+	require(['bootstrap'],function($){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+	});
+</script>
+
+
+{elseif $operation == 'agent_team'}
+
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:30px;">ID</th>
+                  <th>团队人数</th>	
+					<th>城市</th>					
+					<th>姓名</th>
+					<th>电话</th>
+					<th>QQ</th>
+                  	<th>公司</th>
+
+				
+					<th>创建时间</th>
+					<th>状态</th>
+					<th >操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $list $vo}
+				<tr>
+					<td>{$vo['id']}</td>
+                  <td><span class="label label-success">{$vo['mark']}</span></td>
+					<td>{$vo['cityname']}</td>
+					<td>{$vo['name']}</td>
+					<td>{$vo['tel']}</td>
+					<td>{$vo['qq']}</td>
+                  <td>{$vo['companyname']}</td>
+		
+		
+					<td>{php echo date('Y-m-d',$vo['createtime']);}</td>
+					<td> {if $vo['enabled'] == 1} <span class="label label-success">审核通过</span>{else} <span class="label label-danger">待审核</span>{/if}</td>
+					<td style="text-align:left;">
+                      	<a href="{php echo $this->createWebUrl('agent', array('op' => 'editagent', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改套餐">修改套餐</a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'post', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'delete', 'id' => $vo['id']))}"class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+              		
+              
+              		
+              {loop $vo['teamlist'] $v}
+										
+              
+              						<tr>
+					<td>---------</td>
+					<td></td>
+                  <td><span class="label label-success">{$vo['agentrolename']}</span></td>
+					<td>{$vo['cityname']}</td>
+					<td>{$vo['name']}</td>
+					<td>{$vo['tel']}</td>
+					<td>{$vo['qq']}</td>
+                  <td>{$vo['companyname']}</td>
+		
+		
+					<td>{php echo date('Y-m-d',$vo['createtime']);}</td>
+					<td> {if $vo['enabled'] == 1} <span class="label label-success">审核通过</span>{else} <span class="label label-danger">待审核</span>{/if}</td>
+					<td style="text-align:left;">
+                      	<a href="{php echo $this->createWebUrl('agent', array('op' => 'editagent', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改套餐">修改套餐</a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'post', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>
+						<a href="{php echo $this->createWebUrl('agent', array('op' => 'delete', 'id' => $vo['id']))}"class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+              
+              
+										
+							{/loop}
+              
+              		
+              
+              
+              
+              
+				{/loop}
+			</tbody>
+		</table>
+		{$pager}
+	</div>
+</div>
+<script>
+	require(['bootstrap'],function($){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+	});
+</script>
+
+
+{elseif $operation == 'agent_guest'}
+
+
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:30px;">ID</th>
+        				
+					<th>姓名</th>
+					<th>电话</th>
+				
+					<th>预约房源</th>
+					<th>所属经纪人</th>
+				
+					<th>创建时间</th>
+					<th >操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $list $vo}
+				<tr>
+					<td>{$vo['id']}</td>
+					<td>{$vo['name']}</td>
+					<td>{$vo['tel']}</td>
+					<td><span class="label label-success">{$vo['houseplan']}</span>{$vo['title']}</td>
+                 	<td>{$vo['agentname']}</td>
+		
+					<td>{php echo date('Y-m-d',$vo['createtime']);}</td>
 					<td style="text-align:left;">
 						<a href="{php echo $this->createWebUrl('agent', array('op' => 'post', 'id' => $vo['id']))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-edit"></i></a>
 						<a href="{php echo $this->createWebUrl('agent', array('op' => 'delete', 'id' => $vo['id']))}"class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
@@ -66,6 +218,106 @@
 		});
 	});
 </script>
+{elseif $operation == 'editagent'}
+
+
+
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1" onsubmit='return formcheck2()'>
+
+ 
+ 
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>套餐列表</label>
+	<div class="col-sm-8 col-xs-12">
+		<select class="form-control tpl-category-parent we7-select" id="agentroleid" name="agentroleid" >
+					
+					<option value="0">请选择套餐</option>
+						{loop $agentrolelist $vo}
+				<option value="{$vo['id']}" >{$vo['title']}</option>
+				{/loop}
+				
+
+				</select>
+	</div>
+</div>
+
+      
+      
+ 
+
+<input type="hidden" name="id" id="id" value="{$id}"/>
+<div class="form-group">
+
+
+			<input type="submit" name="submit" value="立即修改" class="btn btn-primary col-lg-1" style="margin-left:300px;" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+</form>
+</div>
+
+{elseif $operation == 'agent_setting'}
+
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" onsubmit='return formcheck()'>
+		<input type="hidden" name="id" value="{$agent['id']}" />
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				佣金比例设置
+			</div>
+			<div class="panel-body">
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>佣金占比</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" id='rate4' name="rate4" class="form-control" value="{$agent['rate4']}" />
+					</div>
+				</div>
+			
+
+              
+              <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分销一级比例</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" id='rate1' name="rate1" class="form-control" value="{$agent['rate1']}" />
+					</div>
+				</div>
+              
+              <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分销二级比例</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" id='rate2' name="rate2" class="form-control" value="{$agent['rate2']}" />
+					</div>
+				</div>
+              
+                  <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分销三级比例</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" id='rate3' name="rate3" class="form-control" value="{$agent['rate3']}" />
+					</div>
+				</div>
+			
+				
+			</div>
+		</div>
+<div class="form-group col-sm-12">
+	<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	</div>
+	</form>
+</div>
+
+<script language='javascript'>
+	function formcheck() {
+	
+
+	
+		return true;
+	}
+</script>
+
+
 {elseif $operation == 'post'}
 
 <div class="main">
@@ -82,6 +334,37 @@
 						<input type="text" name="sort" class="form-control" value="{$agent['sort']}" />
 					</div>
 				</div>
+              
+              <div class="form-group">
+	
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>所属城市</label>
+	<div class="col-sm-8 col-xs-12">
+		<select class="form-control tpl-category-parent we7-select" id="cityid" name="cityid">
+				<option value="0">请选择所属城市</option>
+					{loop $citylist $vo}
+				<option value="{$vo['id']}" {if $agent['cityid'] == $vo['id']} selected {/if}>{$vo['name']}</option>
+				{/loop}
+				
+				
+			</select>
+	</div>
+</div>
+              
+              
+                           <div class="form-group">
+	
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>关联楼盘</label>
+	<div class="col-sm-8 col-xs-12">
+		<select class="form-control tpl-category-parent we7-select" id="houseid" name="houseid">
+				<option value="0">请选择关联楼盘</option>
+					{loop $newhouselist $vo}
+				<option value="{$vo['id']}" {if $agent['houseid'] == $vo['id']} selected {/if}>{$vo['housename']}</option>
+				{/loop}
+				
+				
+			</select>
+	</div>
+</div>
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>姓名</label>
 					<div class="col-sm-9 col-xs-12">
@@ -154,26 +437,13 @@
 			util.message("请输入姓名");
 			return false;
 		}
-		if ($("#intro").val()=='') {
-			util.message("请输入简介");
-			return false;
-		}
+		
 		if ($("#tel").val()=='') {
 		    util.message("请输入手机号");
 			return false;
 		}
-		if ($("#qq").val()=='') {
-			util.message("请输入QQ");
-			return false;
-		}
-		if ($("#address").val()=='') {
-			util.message("请输入中介地址");
-			return false;
-		}
-		if ($("textarea[name='content']").val()=='') {
-		//util.message("请输入详情");
-		//	return false;
-		}
+	
+
 		return true;
 	}
 </script>
